@@ -1,68 +1,66 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Pre- Requirements
 
-## Available Scripts
+1. Install Python 2.7 
+2. Install Flask:           pip install -U Flask
+2. Install Flask-RESTful:   pip install flask-restful
 
-In the project directory, you can run:
+# To start the server
+  - Open a terminal
+  - Navigate to server file
+  - Run python app.py
 
-### `yarn start`
+# To start react app
+ - Open a new terminal 
+ - Run npm start - this will open up a browser on localhost:3000
+ - Test with the endpoint 
+    ## http://localhost:3000/bandwidths/device_uuid/end_time/window_time/num_windows
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+        ### e.g. http://localhost:3000/bandwidths/cf4844bc-a107-4e0a-84e1-fa04d76d388c
+ 
+   > device_uuid (required)
+   > end_time (optional, default now)
+   > window_time (optional, default 60)
+   > num_windows (optional, default 10)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# interview-platform-take-home
+Take-home test for platform development candidates
 
-### `yarn build`
+This test should take about an hour, no more than two.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Resources
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+`bandwidths.py` - Listing of bandwidth entry for devices, values are "bytes_ts" (bytes to server) and "bytes_fs" (bytes from server)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Part 1
+Using the Python framework of your choice (e.g. Flask, Django) create an API endpoint to display the data from `bandwidths.py`.
 
-### `yarn eject`
+The values for bandwidth should be aggregated by `window_time` (default 60 seconds) in order to limit the data we send to the front end and the number of points we display.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+*Parameters:*
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    device_uuid (required)
+    end_time (epoch timestamp of the last time we want to return, default now)
+    window_time (window in seconds, default 60 seconds)
+    num_windows (number of windows i.e., data points, to return, default 10)
+    
+    For example,
+    device_uuid = "abc", end_time = 1546300800, window_time = 60, num_windows = 10\
+    would return 10 data points (timestamp, value) where each value would be the sum of bytes in that 60 second window, with the last window ending on 1546300800 (Jan 1st 2019 GMT).
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The format of the response of this call is up to you so long as it properly powers the component you'll build in part 2.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Part 2
+Using the JS framework of your choice (e.g. React, Vue) consume the API endpoint you created in Part 1 and use it to render a chart using the charting library of your choice (e.g. FusionCharts, Chart.js).  This chart should consist of two lines - one for bandwidth to the server (`bytes_ts` in `bandwidths.py`) and one for bandwidth from the server (`bytes_fs` in `bandwidths.py`).
 
-## Learn More
+The API endpoint should accept 4 GET request parameters, allowing you to alter the chart window via address bar:
+   ```
+   device_uuid (required)
+   end_time (optional, default now)
+   window_time (optional, default 60)
+   num_windows (optional, default 10)
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+### Running your Solution
+Include a README.md with instructions to setup (e.g. `yarn install`) and run (e.g. `yarn start`) your solution

@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Chart from './components/Chart';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(){
+    super();
+    this.state = {
+      bandwidthData: {
+        bts: [],
+        bfs: []
+      },
+      chartData: {}
+    }
+  }
+
+  componentWillMount(){
+    this.getBandwithData();
+  }
+
+  getBandwithData(){
+    const { pathname, search } = window.location;
+    fetch(`${pathname}${search}`)
+     .then(response => response.json())
+     .then(data => this.setState({bandwidthData: {...data}}))
+  }
+
+  
+  render() {
+    return (
+      <div className="App">
+        <Chart bandwidthData={this.state.bandwidthData}  legendPosition="bottom"/>
+      </div>
+    );
+  }
 }
 
 export default App;
